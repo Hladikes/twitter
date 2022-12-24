@@ -10,8 +10,8 @@ const app = express()
 app.use(express.static(path.join(__dirname, '../frontend/dist')))
 app.use(cors())
 app.use('/trpc', trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext,
+  router: appRouter,
+  createContext,
 }))
 
 app.listen(PORT, () => {

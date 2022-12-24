@@ -35,19 +35,23 @@ export const userRouter = router({
   login: publicProcedure.input(z.object({
     username: z.string(),
     password: z.string(),
-  })).mutation(({ input }) => {
-    const user = users.find((u) => u.username === input.username && u.password === input.password)
-
-    if (!user) {
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Invalid credentials'
-      })
+  })).mutation(({ input }): Omit<User, 'password'> => {
+    const user = users.find((u) => {
+      return u.username === input.username && u.password === input.password
+    })
+    
+    if (user) {
+      return {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      }
     }
 
-    const clone = { ...user }
-    delete clone.password
-    return clone
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Invalid login credentials',
+    })
   }),
 
   getAllUsers: publicProcedure.input(() => {}).query(() => {

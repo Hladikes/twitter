@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { trpc } from '@/plugins/trpc'
+import type { AppRouter } from 'backend/trpc'
+import type { TRPCClientError } from '@trpc/client'
 
 type User = {
   id: number
@@ -21,20 +23,21 @@ export const useUserStore = defineStore('counter', () => {
   }
 
   async function login(userObj: { username: string, password: string }) {
-    const loggedUser = await trpc.user.login.mutate(userObj)
+    try {
+      const loggedUser = await trpc.user.login.mutate(userObj)
     
-    if (loggedUser) {
       user.value = loggedUser
+    
       isLogged.value = true
-      return
+    } catch (err) {
+      user.value.id = -1
+      user.value.username = ''
+      user.value.email = ''
+  
+      isLogged.value = false
+
+      throw new Error('User not found')
     }
-
-    user.value.id = -1
-    user.value.username = ''
-    user.value.email = ''
-    isLogged.value = false
-
-    throw 'Bruh'
   }
 
   return {

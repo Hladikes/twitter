@@ -15,19 +15,11 @@
     const formData = new FormData(event.target as HTMLFormElement)
     const username = String(formData.get('username'))
     const password = String(formData.get('password'))
-
-    user.login({ username, password })
-      .then(() => {
-
-      })
-      .catch((err: Error) => {
-        error.show(err.message)
-      })
   }
 </script>
 
 <template>
-  <h1>Login</h1>
+  <h1>Register</h1>
   <pre>Logged: {{ user.isLogged }}</pre>
   <pre>User: {{ user.current ?? 'none' }}</pre>
 
@@ -39,6 +31,7 @@
   </div>
 
   <form @submit.prevent="formSubmit">
+    <input name="email" type="email" placeholder="E-mail"><br>
     <input name="username" type="text" placeholder="Username"><br>
     <input name="password" type="text" placeholder="Password"><br>
     <button type="submit">Login</button>

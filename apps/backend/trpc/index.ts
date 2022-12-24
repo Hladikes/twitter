@@ -1,5 +1,6 @@
-import { inferAsyncReturnType, initTRPC } from '@trpc/server'
-import * as trpcExpress from '@trpc/server/adapters/express'
+import { initTRPC } from '@trpc/server'
+import type { inferAsyncReturnType } from '@trpc/server'
+import type * as trpcExpress from '@trpc/server/adapters/express'
 import { ZodError } from 'zod'
 
 export const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({})
