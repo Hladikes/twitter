@@ -1,8 +1,9 @@
 import { router, publicProcedure } from '../index'
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
+import { sessionGuard, createSession } from '../session'
 
-type User = {
+export type User = {
   id: number
   username: string
   email: string
@@ -35,12 +36,18 @@ export const userRouter = router({
   login: publicProcedure.input(z.object({
     username: z.string(),
     password: z.string(),
-  })).mutation(({ input }): Omit<User, 'password'> => {
+  })).mutation(({ ctx, input }): Omit<User, 'password'> => {
     const user = users.find((u) => {
       return u.username === input.username && u.password === input.password
     })
     
     if (user) {
+      const maxAge = 1000 * 60
+      const sid = Math.random().toString(36).substring(2) 
+
+      ctx.cookie('session', sid, { maxAge })
+      createSession(sid, maxAge)
+      
       return {
         id: user.id,
         email: user.email,
@@ -54,7 +61,11 @@ export const userRouter = router({
     })
   }),
 
-  getAllUsers: publicProcedure.input(() => {}).query(() => {
+  checkSession: publicProcedure.use(sessionGuard).input(() => {}).query(() => {
+    return null
+  }),
+
+  getAllUsers: publicProcedure.use(sessionGuard).input(() => {}).query(() => {
     return users
   })
 })

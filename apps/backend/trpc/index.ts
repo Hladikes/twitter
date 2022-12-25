@@ -2,8 +2,15 @@ import { initTRPC } from '@trpc/server'
 import type { inferAsyncReturnType } from '@trpc/server'
 import type * as trpcExpress from '@trpc/server/adapters/express'
 import { ZodError } from 'zod'
+import type { CookieOptions } from 'express'
 
-export const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({})
+export const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({
+  cookies: req.cookies,
+  cookie: (name: string, value: number | string, options: CookieOptions) => {
+    res.cookie(name, value, options)
+  },
+})
+
 type Context = inferAsyncReturnType<typeof createContext>
 const t = initTRPC.context<Context>().create({
   errorFormatter({ shape, error }) {
@@ -17,14 +24,13 @@ const t = initTRPC.context<Context>().create({
             ? error.cause.flatten()
             : null,
       },
-    };
+    }
   }
 })
 
 export const middleware = t.middleware
 export const router = t.router
 export const publicProcedure = t.procedure
-
 
 import { userRouter } from './routes/user'
 
