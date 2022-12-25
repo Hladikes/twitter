@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useUserStore } from '@/stores/user'
   import { useError } from '@/plugins/hooks/error'
+  import Router from '@/router'
 
   const user = useUserStore()
   const error = useError()
@@ -19,6 +20,7 @@
     user.login({ username, password })
       .then(() => {
         (event.target as HTMLFormElement).reset()
+        Router.push({ name: 'users' })
       })
       .catch((err: string[]) => {
         error.show(err.join('\n'))

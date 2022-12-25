@@ -10,21 +10,33 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/login',
+      meta: {
+        protected: false,
+      },
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: {
+        protected: false,
+      },
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: RegisterView,
+      meta: {
+        protected: false,
+      },
     },
     {
       path: '/users',
       name: 'users',
-      component: UsersView
+      component: UsersView,
+      meta: {
+        protected: true,
+      },
     },
   ]
 })
@@ -32,8 +44,21 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const user = useUserStore()
-  await user.checkSession()
-  next()
+  const authorized = await user.checkSession()
+  
+  if (authorized && to.meta.protected) {
+    return next()
+  }
+
+  if (authorized && (to.name === 'login' || to.name === 'register')) {
+    return next({ name: 'users' })
+  }
+
+  if (to.name === 'login' || to.name === 'register') {
+    return next()
+  }
+  
+  return next({ name: 'login' })
 })
 
 export default router

@@ -13,10 +13,22 @@ export type User = {
 const users: User[] = [
   {
     id: 0,
-    email: 'test@gmail.com',
-    username: 'test',
-    password: 'test',
-  }
+    email: 'user1@mail.com',
+    username: 'user1',
+    password: '56334737684af8c521a741061a5a1c32df76bbab0648fcb6753b4512b3e23e36',
+  },
+  {
+    id: 1,
+    email: 'user2@mail.com',
+    username: 'user2',
+    password: '56334737684af8c521a741061a5a1c32df76bbab0648fcb6753b4512b3e23e36',
+  },
+  {
+    id: 2,
+    email: 'user3@mail.com',
+    username: 'user3',
+    password: '56334737684af8c521a741061a5a1c32df76bbab0648fcb6753b4512b3e23e36',
+  },
 ]
 
 export const userRouter = router({
@@ -46,7 +58,7 @@ export const userRouter = router({
       const sid = Math.random().toString(36).substring(2) 
 
       ctx.cookie('session', sid, { maxAge })
-      createSession(sid, maxAge)
+      createSession(sid, user, maxAge)
       
       return {
         id: user.id,
@@ -61,8 +73,16 @@ export const userRouter = router({
     })
   }),
 
-  checkSession: publicProcedure.use(sessionGuard).input(() => {}).query(() => {
+  logout: publicProcedure.use(sessionGuard).input(() => {}).query(({ ctx }) => {
+    ctx.cookie('session', 0, {
+      expires: new Date(0),
+    })
+    
     return null
+  }),
+
+  checkSession: publicProcedure.use(sessionGuard).input(() => {}).query(({ ctx }) => {
+    return ctx.user
   }),
 
   getAllUsers: publicProcedure.use(sessionGuard).input(() => {}).query(() => {

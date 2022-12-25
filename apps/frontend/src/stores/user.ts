@@ -9,6 +9,7 @@ export type User = {
 }
 
 export const useUserStore = defineStore('counter', () => {
+  const isInitialized = ref(false)
   const isLogged = ref(false)
   const user = ref<User>({
     id: -1,
@@ -32,16 +33,26 @@ export const useUserStore = defineStore('counter', () => {
     })
   }
 
+  function logout() {
+    reset()
+    return new Promise((resolve) => {
+      trpc.user.logout.query().then(resolve).catch(resolve)
+    })
+  }
+
   function login(userObj: { username: string, password: string }) {
     return new Promise<void>((resolve, reject) => {
       trpc.user.login.mutate(userObj)
         .then((loggedUser) => {
+          isInitialized.value = true
           user.value = loggedUser
           isLogged.value = true
 
           resolve()
         })
         .catch((err) => {
+          isInitialized.value = true
+
           reset()
           reject(getErrorMessage(err))
         })
@@ -59,8 +70,16 @@ export const useUserStore = defineStore('counter', () => {
   function checkSession() {
     return new Promise<boolean>((resolve) => {
       trpc.user.checkSession.query()
-        .then(() => resolve(true))
+        .then((loggedUser) => {
+          isInitialized.value = true
+          user.value = loggedUser
+          isLogged.value = true
+          
+          resolve(true)
+        })
         .catch(() => {
+          isInitialized.value = true
+          
           reset()
           resolve(false)
         })
@@ -68,10 +87,12 @@ export const useUserStore = defineStore('counter', () => {
   }
 
   return {
+    isInitialized,
     isLogged,
     current: computed(() => isLogged.value ? user : null),
     register,
     login,
+    logout,
     getAllUsers,
     checkSession,
   }
