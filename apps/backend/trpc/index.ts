@@ -1,8 +1,8 @@
-import { initTRPC } from '@trpc/server'
 import type { inferAsyncReturnType } from '@trpc/server'
+import { initTRPC } from '@trpc/server'
 import type * as trpcExpress from '@trpc/server/adapters/express'
-import { ZodError } from 'zod'
 import type { CookieOptions } from 'express'
+import { ZodError } from 'zod'
 
 export const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({
   cookies: req.cookies,
@@ -19,8 +19,7 @@ const t = initTRPC.context<Context>().create({
       data: {
         ...shape.data,
         zodError:
-          error.code === 'BAD_REQUEST' &&
-          error.cause instanceof ZodError
+          error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
             ? error.cause.flatten()
             : null,
       },

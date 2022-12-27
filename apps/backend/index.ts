@@ -1,9 +1,9 @@
 import * as trpcExpress from '@trpc/server/adapters/express'
-import { appRouter, createContext } from './trpc'
-import express from 'express'
-import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import express from 'express'
 import path from 'path'
+import { appRouter, createContext } from './trpc'
 
 const PORT = 8080
 const app = express()

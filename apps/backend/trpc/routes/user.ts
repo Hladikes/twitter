@@ -1,7 +1,7 @@
-import { router, publicProcedure } from '../index'
-import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
-import { sessionGuard, createSession } from '../session'
+import { z } from 'zod'
+import { publicProcedure, router } from '../index'
+import { createSession, sessionGuard } from '../session'
 
 export type User = {
   id: number
