@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon . -e ts --exec \"npm run start\"",
-    "start": "ts-node --transpile-only index.ts"
+    "start": "ts-node --transpile-only index.ts",
+    "migrate": "prisma migrate dev --name init"
   },
   "keywords": [],
   "author": "",

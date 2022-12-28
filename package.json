@@ -10,7 +10,8 @@
     "build:frontend": "npm run build -w frontend",
     "dev:backend": "npm run dev -w backend",
     "start:backend": "npm run start -w backend",
-    "deploy": "npm run build:frontend && npm run start:backend"
+    "migrate:backend": "npm run migrate -w backend",
+    "deploy": "npm run build:frontend && npm run migrate:backend && npm run start:backend"
   },
   "keywords": [],
   "author": "",

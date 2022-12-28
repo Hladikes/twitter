@@ -35,21 +35,17 @@ export const tweetRouter = router({
 
   getAllTweets: publicProcedure.use(sessionGuard).query(async ({ ctx }) => {
     try {
-      const author = {
-        select: {
-          id: true,
-          username: true,
-        }
-      }
-
       const tweets = await prisma.tweet.findMany({
-        orderBy: {
-          createdAt: 'desc', 
+        orderBy: { createdAt: 'desc', },
+        where: {
+          parentId: {
+            equals: null,
+          }
         },
         select: {
           id: true,
           content: true,
-          author,
+          author: { select: { id: true, username: true, profilePicture: true, } },
           likes: {
             where: {
               userId: ctx.user.id,
@@ -65,7 +61,7 @@ export const tweetRouter = router({
             select: {
               id: true,
               content: true,
-              author,
+              author: { select: { id: true, username: true, profilePicture: true, } },
             }
           },
           _count: true,
@@ -80,6 +76,66 @@ export const tweetRouter = router({
           message: 'An unkown error has occoured',
         })
       }
+    }
+  }),
+
+  getTweet: publicProcedure.use(sessionGuard).input(
+    z.object({
+      tweetId: z.number(),
+    })
+  ).query(async ({ ctx, input }) => {
+    try {
+      const tweet = await prisma.tweet.findFirst({
+        where: {
+          id: input.tweetId,
+        },
+        select: {
+          id: true,
+          content: true,
+          author: { select: { id: true, username: true, profilePicture: true, } },
+          comments: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+            select: {
+              id: true,
+              content: true,
+              author: { select: { id: true, username: true, profilePicture: true, } },
+              likes: {
+                where: {
+                  userId: ctx.user.id,
+                },
+                select: {
+                  id: true,
+                  userId: true,
+                }
+              },
+              createdAt: true,
+              updatedAt: true,
+              _count: true,
+            }
+          },
+          likes: {
+            where: {
+              userId: ctx.user.id,
+            },
+          },
+          _count: {
+            select: {
+              likes: true
+            }
+          },
+          createdAt: true,
+          updatedAt: true,
+        }
+      })
+  
+      return tweet
+    } catch (err) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'An unkown error has occoured',
+      })
     }
   }),
 

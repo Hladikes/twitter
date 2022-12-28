@@ -4,11 +4,11 @@
   import Error from '@/components/Error.vue'
   import { useError } from '@/plugins/hooks/error'
   import TweetItem from '@/components/TweetItem.vue'
-  import type { Tweet } from '@/types'
+  import type { RouterOutput } from '@/types'
   import TweetInput from '@/components/TweetInput.vue'
 
   const error = useError()
-  const tweets = ref<Tweet[]>([])
+  const tweets = ref<RouterOutput['tweet']['getAllTweets']>([])
   
   function fetchAllTweets() {
     trpc.tweet.getAllTweets.query()
@@ -33,7 +33,15 @@
       <Error :error="error" />
       <div class="divide-y divide-white/10">
         <div v-for="tweet in tweets" :key="tweet.id">
-          <TweetItem :tweet="tweet" />
+          <TweetItem
+            :id="tweet.id"
+            :username="tweet.author.username"
+            :profile-picture="tweet.author.profilePicture ?? ''"
+            :content="tweet.content"
+            :is-liked="tweet.likes.length > 0"
+            :created-at="tweet.createdAt"
+            :likes-count="tweet._count.likes"
+            :comments-count="tweet._count.comments" />
         </div>
       </div>
     </div>

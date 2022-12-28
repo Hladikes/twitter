@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import TweetsView from '@/views/TweetsView.vue'
+import TweetDetailView from '@/views/TweetDetailView.vue'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -34,6 +35,14 @@ const router = createRouter({
       path: '/tweets',
       name: 'tweets',
       component: TweetsView,
+      meta: {
+        protected: true,
+      },
+    },
+    {
+      path: '/tweet/:id',
+      name: 'tweet',
+      component: TweetDetailView,
       meta: {
         protected: true,
       },

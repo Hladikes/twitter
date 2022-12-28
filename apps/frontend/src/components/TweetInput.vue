@@ -38,8 +38,10 @@
         placeholder="Tweet something ...">
       <button 
         :disabled="content.length < 2"
-        class="px-5 py-2 bg-lime-400/10 hover:bg-lime-400/20 text-lime-400 font-medium rounded-md disabled:cursor-not-allowed disabled:opacity-50" 
-        type="submit">Send</button>
+        class="flex items-center px-5 py-2 bg-lime-400/10 hover:bg-lime-400/20 text-lime-400 font-medium rounded-md disabled:cursor-not-allowed disabled:opacity-50" 
+        type="submit">
+        <span class="material-symbols-outlined">send</span>
+      </button>
     </form>
   </div>
 </template>
