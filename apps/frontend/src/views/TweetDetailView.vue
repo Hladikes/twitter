@@ -55,7 +55,7 @@
 
       <h1 class="text-white px-3">Comments</h1>
 
-      <div class="divide-y divide-white/10">
+      <div class="divide-y divide-white/10 pb-10">
         <TweetItem
           v-for="comment in tweet.comments"
           :id="comment.id"
