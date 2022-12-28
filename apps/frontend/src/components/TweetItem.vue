@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import { trpc } from '@/plugins/trpc'
   import { RouterLink } from 'vue-router'
 
@@ -16,6 +16,11 @@
 
   const isLiked = ref(props.isLiked)
   const likesCount = ref(props.likesCount)
+
+  watch(props, () => {
+    isLiked.value = props.isLiked
+    likesCount.value = props.likesCount
+  })
 
   function like() {
     trpc.tweet.likeTweet.query({
