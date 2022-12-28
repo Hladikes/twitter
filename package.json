@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "dev:frontend": "npm run dev -w frontend",
-    "build:frontend": "npm run build -w frontend",
+    "build:frontend": "npm run build-only -w frontend",
     "dev:backend": "npm run dev -w backend",
     "start:backend": "npm run start -w backend",
     "migrate:backend": "npm run migrate -w backend",
