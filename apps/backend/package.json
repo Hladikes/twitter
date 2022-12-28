@@ -11,11 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^4.8.0",
     "@trpc/server": "^10.7.0",
+    "@types/bcrypt": "^5.0.0",
+    "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "frontend": "*",
+    "prisma": "^4.8.0",
     "shared": "*",
     "zod": "^3.20.2"
   },

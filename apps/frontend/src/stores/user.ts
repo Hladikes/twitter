@@ -28,19 +28,19 @@ export const useUserStore = defineStore('counter', () => {
   function register(userObj: { email: string, username: string, password: string }) {
     return new Promise<void>((resolve, reject) => {
       trpc.user.register.mutate(userObj)
-        .then(resolve)
+        .then(() => resolve())
         .catch((err) => reject(getErrorMessage(err)))
     })
   }
 
   function logout() {
-    reset()
     return new Promise((resolve) => {
+      reset()
       trpc.user.logout.query().then(resolve).catch(resolve)
     })
   }
 
-  function login(userObj: { username: string, password: string }) {
+  function login(userObj: { email: string, password: string }) {
     return new Promise<void>((resolve, reject) => {
       trpc.user.login.mutate(userObj)
         .then((loggedUser) => {
@@ -56,14 +56,6 @@ export const useUserStore = defineStore('counter', () => {
           reset()
           reject(getErrorMessage(err))
         })
-    })
-  }
-
-  function getAllUsers() {
-    return new Promise<User[]>((resolve, reject) => {
-      trpc.user.getAllUsers.query()
-        .then(resolve)
-        .catch((err) => reject(getErrorMessage(err)))
     })
   }
 
@@ -93,7 +85,6 @@ export const useUserStore = defineStore('counter', () => {
     register,
     login,
     logout,
-    getAllUsers,
     checkSession,
   }
 })

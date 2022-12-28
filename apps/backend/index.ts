@@ -11,7 +11,7 @@ const app = express()
 app.use(express.static(path.join(__dirname, '../frontend/dist')))
 app.use(cors({
   credentials: true,
-  origin: ['http://localhost:5173']
+  origin: ['http://localhost:5173', 'http://192.168.0.103:5173']
 }))
 app.use(cookieParser())
 app.use('/trpc', trpcExpress.createExpressMiddleware({

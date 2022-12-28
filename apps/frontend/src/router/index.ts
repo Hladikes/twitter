@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import UsersView from '@/views/UsersView.vue'
+import TweetsView from '@/views/TweetsView.vue'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -31,9 +31,9 @@ const router = createRouter({
       },
     },
     {
-      path: '/users',
-      name: 'users',
-      component: UsersView,
+      path: '/tweets',
+      name: 'tweets',
+      component: TweetsView,
       meta: {
         protected: true,
       },
@@ -51,7 +51,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (authorized && (to.name === 'login' || to.name === 'register')) {
-    return next({ name: 'users' })
+    return next({ name: 'tweets' })
   }
 
   if (to.name === 'login' || to.name === 'register') {

@@ -32,9 +32,11 @@ export const router = t.router
 export const publicProcedure = t.procedure
 
 import { userRouter } from './routes/user'
+import { tweetRouter } from './routes/tweet'
 
 export const appRouter = t.router({
-  user: userRouter
+  user: userRouter,
+  tweet: tweetRouter,
 })
  
 export type AppRouter = typeof appRouter

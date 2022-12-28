@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { RouterLink, RouterView } from 'vue-router'
+  import { RouterView } from 'vue-router'
   import { useUserStore } from './stores/user'
   import Router from '@/router'
 
@@ -12,50 +12,11 @@
 </script>
 
 <template>
-  <main>
+  <main class="min-h-screen flex justify-center bg-stone-900">
     <template v-if="user.isInitialized">
-      <header>
-        <nav>
-          <template v-if="!user.isLogged">
-            <RouterLink to="/login">Login</RouterLink>
-            <span>&nbsp;</span>
-            <RouterLink to="/register">Register</RouterLink>
-            <span>&nbsp;</span>
-          </template>
-
-          <template v-else>
-            <RouterLink to="/users">Users</RouterLink>
-          </template>
-        </nav>
-      </header>
-
-      <hr>
-
-      <div>
-        <span>Logged: {{ user.isLogged }}</span><br>
-        <pre>User: {{ user.current ?? 'none' }}</pre>
+      <div class="w-full lg:w-1/2 lg:my-20 lg:rounded-2xl bg-stone-800 sm:border border-white/5 overflow-hidden flex flex-col">
+        <RouterView />
       </div>
-      
-      <hr>
-
-      <RouterView />
-
-      <template v-if="user.isLogged">
-        <hr>
-        <button @click="logout()">Logout</button>
-      </template>
     </template>
   </main>
 </template>
-
-<style scoped>
-  main {
-    max-width: 600px;
-    width: 100%;
-    height: calc(100vh - 64px);
-    margin: 32px auto;
-    box-sizing: border-box;
-    border: 1px solid gray;
-    padding: 24px;
-  }
-</style>

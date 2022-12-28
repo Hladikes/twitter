@@ -1,6 +1,11 @@
 import { TRPCError } from '@trpc/server'
 import { middleware } from './index'
-import type { User } from './routes/user'
+
+type User = {
+  id: number
+  username: string
+  email: string
+}
 
 const sessions = new Map<string, { timeoudId: any, user: User }>()
 
@@ -25,14 +30,18 @@ export function deleteSession(sid: string) {
 }
 
 export const sessionGuard = middleware(({ ctx, next }) => {
-  if (ctx.cookies.session && isValid(ctx.cookies.session)) {
+  if (ctx.cookies.session && isValid(ctx.cookies.session) && sessions.has(ctx.cookies.session)) {
     return next({
       ctx: {
-        user: sessions.get(ctx.cookies.session)?.user
+        user: sessions.get(ctx.cookies.session)!.user
       },
     })
   }
   
+  ctx.cookie('session', 0, {
+    expires: new Date(0),
+  })
+
   throw new TRPCError({
     code: 'FORBIDDEN',
     message: 'Unauthorized',
