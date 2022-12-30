@@ -2,9 +2,11 @@
   import { ref, watch } from 'vue'
   import { trpc } from '@/plugins/trpc'
   import { RouterLink } from 'vue-router'
+  import { useUserStore } from '@/stores/user'
 
   const props = defineProps<{
     username: string
+    userId: number
     profilePicture: string
     content: string
     id: number
@@ -14,6 +16,9 @@
     isLiked: boolean
   }>()
 
+  const emit = defineEmits(['delete'])
+
+  const user = useUserStore()
   const isLiked = ref(props.isLiked)
   const likesCount = ref(props.likesCount)
 
@@ -39,12 +44,22 @@
       likesCount.value -= 1
     })
   }
+
+  function deleteTweet() {
+    if (confirm('Are you sure you want to delete this tweet ?')) {
+      trpc.tweet.deleteTweet.mutate({
+        tweetId: props.id
+      }).then(() => {
+        emit('delete')
+      })
+    }
+  }
 </script>
 
 <template>
   <RouterLink 
     :to="{ path: `/tweet/${props.id}` }"
-    class="px-3 py-3 sm:p-3 hover:cursor-pointer sm:hover:bg-white/5 flex flex-row space-x-2 sm:space-x-4">
+    class="relative px-3 py-3 first-of-type:rounded-t-lg last-of-type:rounded-b-lg sm:p-3 hover:cursor-pointer sm:hover:bg-white/5 flex flex-row space-x-2 sm:space-x-4">
     <div class="h-12 w-12 bg-white/5 rounded-full"></div>
     <div class="flex-1 flex flex-col">
       <div class="flex flex-col justify-center items-start">
@@ -61,16 +76,24 @@
           @click.prevent="isLiked ? removeLike() : like()"
           :class="{
             'text-red-400 bg-red-500/10': isLiked,
-            'text-white bg-white/5': !isLiked,
+            'text-white/70 bg-white/5': !isLiked,
           }"
           class="flex items-center space-x-2 font-medium py-0.5 px-3 rounded-full">
           <span>{{ likesCount }}</span>
           <span class="material-symbols-outlined text-base">favorite</span>
         </button>
+        
         <span class="flex items-center space-x-2 font-medium py-0.5 px-3 rounded-full text-white/50">
           <span>{{ props.commentsCount }}</span>
           <span class="material-symbols-outlined text-base">comment</span>
         </span>
+
+        <button 
+          v-if="props.userId === user.current?.value.id"
+          @click.prevent="deleteTweet()"
+          class="absolute top-0 right-0 flex items-center font-medium px-4 py-3 text-white/50 hover:text-red-400">
+          <span class="material-symbols-outlined text-base">delete</span>
+        </button>
       </div>
     </div>
   </RouterLink>

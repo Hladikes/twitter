@@ -52,7 +52,7 @@
             class="p-2 text-white hover:underline"
             :to="{ name: 'register' }">Register</RouterLink>
           <button 
-            class="px-5 py-2 bg-lime-400/10 hover:bg-lime-400/20 text-lime-400 font-medium rounded-md" 
+            class="px-5 py-2 bg-accent/10 hover:bg-accent/20 text-accent font-medium rounded-md" 
             type="submit">Login</button>
         </div>
       </form>

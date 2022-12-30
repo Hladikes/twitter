@@ -178,4 +178,26 @@ export const tweetRouter = router({
       })
     }
   }),
+
+  deleteTweet: publicProcedure.use(sessionGuard).input(
+    z.object({
+      tweetId: z.number(),
+    })
+  ).mutation(async ({ ctx, input }) => {
+    try {
+      await prisma.tweet.deleteMany({
+        where: {
+          AND: [
+            { authorId: ctx.user.id },
+            { id: input.tweetId }
+          ]
+        },
+      })
+    } catch (err) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Could not delete this tweet'
+      })
+    }
+  })
 })
