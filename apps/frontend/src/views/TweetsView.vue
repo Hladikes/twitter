@@ -1,19 +1,19 @@
 <script setup lang="ts">
   import { trpc } from '@/plugins/trpc'
   import { onMounted, ref } from 'vue'
-  import Error from '@/components/Error.vue'
-  import { useError } from '@/plugins/hooks/error'
+  import Alert from '@/components/Alert.vue'
+  import { useAlert } from '@/plugins/hooks/alert'
   import TweetItem from '@/components/TweetItem.vue'
   import type { RouterOutput } from '@/types'
   import TweetInput from '@/components/TweetInput.vue'
 
-  const error = useError()
+  const alert = useAlert()
   const tweets = ref<RouterOutput['tweet']['getAllTweets']>([])
   
   function fetchAllTweets() {
     trpc.tweet.getAllTweets.query()
       .then((t) => tweets.value = t)
-      .catch((err) => error.show('Error while fetching tweets'))
+      .catch((err) => alert.show('Error while fetching tweets', true))
   }
   
   onMounted(() => {
@@ -37,7 +37,7 @@
     </div>
 
     <div class="pb-10">
-      <Error :error="error" />
+      <Alert :alert="alert" />
       <div class="divide-y divide-white/10">
         <div v-for="tweet in tweets" :key="tweet.id">
           <TweetItem

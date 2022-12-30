@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { useUserStore } from '@/stores/user'
-  import { useError } from '@/plugins/hooks/error'
-  import Error from '@/components/Error.vue'
+  import { useAlert } from '@/plugins/hooks/alert'
+  import Alert from '@/components/Alert.vue'
 
   const user = useUserStore()
-  const error = useError()
+  const alert = useAlert()
 
   function formSubmit(event: Event) {
     if (!event.target) {
@@ -19,10 +19,10 @@
     user.register({ email, username, password })
       .then(() => {
         (event.target as HTMLFormElement).reset()
-        error.hide()
+        alert.show('Account was created')
       })
       .catch((err: string[]) => {
-        error.show(err[0])
+        alert.show(err[0], true)
       })
   }
 </script>
@@ -32,7 +32,7 @@
     <div class="w-full sm:w-1/2 p-5 sm:border flex flex-col border-white/10 space-y-2 rounded-xl">
       <h1 class="text-white text-5xl block mb-3">Register</h1>
 
-      <Error :error="error" />
+      <Alert :alert="alert" />
       
       <form @submit.prevent="formSubmit" class="flex flex-col space-y-2">
         <input 

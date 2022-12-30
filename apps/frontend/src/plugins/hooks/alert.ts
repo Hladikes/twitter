@@ -1,12 +1,14 @@
 import { ref } from 'vue'
 
-export function useError() {
+export function useAlert() {
   const message = ref('')
   const visible = ref(false)
+  const isError = ref(false)
 
-  function show(msg: string) {
+  function show(msg: string, error = false) {
     visible.value = true
     message.value = msg
+    isError.value = error
   }
 
   function hide() {
@@ -17,6 +19,7 @@ export function useError() {
   return {
     message,
     visible,
+    isError,
     show,
     hide,
   }

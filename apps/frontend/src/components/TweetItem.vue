@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue'
+  import { computed, ref, watch } from 'vue'
   import { trpc } from '@/plugins/trpc'
   import { RouterLink } from 'vue-router'
   import { useUserStore } from '@/stores/user'
@@ -25,6 +25,16 @@
   watch(props, () => {
     isLiked.value = props.isLiked
     likesCount.value = props.likesCount
+  })
+
+  const content = computed(() => {
+    return props.content.split(' ').map((word) => {
+      if (word.startsWith('http://') || word.startsWith('https://')) {
+        return `<a class="text-blue-400 hover:underline break-words" href="${word}" target="_blank">${word}</a>`
+      } else {
+        return word
+      }
+    }).join(' ')
   })
 
   function like() {
@@ -61,7 +71,7 @@
     :to="{ path: `/tweet/${props.id}` }"
     class="relative px-3 py-3 first-of-type:rounded-t-lg last-of-type:rounded-b-lg sm:p-3 hover:cursor-pointer sm:hover:bg-white/5 flex flex-row space-x-2 sm:space-x-4">
     <div class="h-12 w-12 bg-white/5 rounded-full"></div>
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 overflow-hidden flex flex-col">
       <div class="flex flex-col justify-center items-start">
         <p class="text-white flex flex-row items-center space-x-2">
           <span class="font-medium text-lg">{{ props.username }}</span>
@@ -69,9 +79,9 @@
         </p>
       </div>
       <div>
-        <p class="text-white/80 text-base sm:text-xl break-words">{{ props.content }}</p>
+        <p @click.stop class="text-white/80 text-base sm:text-xl break-words" v-html="content"></p>
       </div>
-      <div class="mt-2 flex flex-row items-center space-x-2">
+      <div class="mt-2 flex flex-row items-center">
         <button 
           @click.prevent="isLiked ? removeLike() : like()"
           :class="{
