@@ -28,7 +28,7 @@ model Tweet {
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id])
   parentId  Int?
-  parent    Tweet?   @relation("ParentTweet", fields: [parentId], references: [id], onDelete: SetNull)
+  parent    Tweet?   @relation("ParentTweet", fields: [parentId], references: [id], onDelete: Cascade)
   comments  Tweet[]  @relation("ParentTweet")
   likes     Like[]
   createdAt DateTime @default(now())
