@@ -14,7 +14,7 @@
 <template>
   <main class="min-h-screen flex justify-center bg-secondary">
     <template v-if="user.isInitialized">
-      <div class="w-full lg:w-1/2 lg:my-20 lg:rounded-2xl bg-primary sm:border border-white/5 overflow-hidden flex flex-col">
+      <div class="w-full lg:w-1/2 lg:my-20 lg:rounded-2xl bg-primary sm:border border-white/10 overflow-hidden flex flex-col">
         <RouterView />
       </div>
     </template>

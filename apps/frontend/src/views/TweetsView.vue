@@ -39,19 +39,19 @@
     <div class="pb-10">
       <Alert :alert="alert" />
       <div class="divide-y divide-white/10">
-        <div v-for="tweet in tweets" :key="tweet.id">
-          <TweetItem
-            :id="tweet.id"
-            :username="tweet.author.username"
-            :user-id="tweet.author.id"
-            :profile-picture="tweet.author.profilePicture ?? ''"
-            :content="tweet.content"
-            :is-liked="tweet.likes.length > 0"
-            :created-at="tweet.createdAt"
-            :likes-count="tweet._count.likes"
-            :comments-count="tweet._count.comments"
-            @delete="deleteTweetLocally(tweet.id)" />
-        </div>
+        <TweetItem
+          v-for="tweet in tweets" 
+          :key="tweet.id"
+          :id="tweet.id"
+          :username="tweet.author.username"
+          :user-id="tweet.author.id"
+          :profile-picture="tweet.author.profilePicture ?? ''"
+          :content="tweet.content"
+          :is-liked="tweet.likes.length > 0"
+          :created-at="tweet.createdAt"
+          :likes-count="tweet._count.likes"
+          :comments-count="tweet._count.comments"
+          @delete="deleteTweetLocally(tweet.id)" />
       </div>
     </div>
   </div>
